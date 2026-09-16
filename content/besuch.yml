@@ -1,0 +1,24 @@
+heading: Besuche uns
+intro: Mitten in der Berner Altstadt, gleich unter den Lauben.
+hours_heading: Öffnungszeiten
+hours:
+  - days: Mittwoch / Donnerstag
+    time: 17 – 23 Uhr
+  - days: Freitag
+    time: 17 – 24 Uhr
+  - days: Samstag
+    time: 10 – 24 Uhr
+  - days: Sonntag – Dienstag
+    time: geschlossen
+hours_note: An Eventtagen bleiben wir gerne länger offen.
+address_heading: Adresse
+address:
+  - Lieblings Café Bar
+  - Gerechtigkeitsgasse 13
+  - 3011 Bern
+map_url: https://maps.app.goo.gl/oRwoJe5e8pBwSg4o9
+map_label: Auf Google Maps öffnen
+transport: Tram 12 bis Rathaus, 2 Minuten zu Fuss.
+contact_heading: Schreibe uns
+email: tschou@lieblings.be
+email_note: Fragen, Reservationen, Ideen — schreib uns einfach.

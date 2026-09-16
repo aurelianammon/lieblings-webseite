@@ -1,0 +1,21 @@
+heading: Eindrücke
+intro: Ein paar Bilder aus dem Lieblings — Kaffee, Kerzenlicht, Spiele und der Eingang unter den Lauben.
+images:
+  - src: /uploads/eindruecke/eindruck-01.jpeg
+    alt: Espresso läuft aus der Siebträgermaschine in eine gemusterte Tasse.
+    caption: Kaffee vom Siebträger
+  - src: /uploads/eindruecke/eindruck-02.jpeg
+    alt: Kerzenlicht neben einem gerahmten Aufruf, Teil des Lieblings-Vereins zu werden.
+    caption: Die Lieblings-Familie sucht Zuwachs
+  - src: /uploads/eindruecke/eindruck-03.jpeg
+    alt: Speisekarte, Zuckerglas und Kerze auf einem Holztisch.
+    caption: Tisch im Kerzenlicht
+  - src: /uploads/eindruecke/eindruck-04.jpeg
+    alt: Holzfigur und Buchstabenspiel vor der Lieblings-Karte.
+    caption: Spiele auf dem Tisch
+  - src: /uploads/eindruecke/eindruck-05.jpeg
+    alt: Roter und beiger Game Boy auf einem Metallregal.
+    caption: Game Boys zum Ausleihen
+  - src: /uploads/eindruecke/eindruck-08.jpeg
+    alt: Eingang des Lieblings an der Gerechtigkeitsgasse mit Open-Schild und Tafeln.
+    caption: Der Eingang unter den Lauben

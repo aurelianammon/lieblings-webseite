@@ -1,0 +1,204 @@
+local_backend: true
+
+backend:
+  name: git-gateway
+  branch: main
+
+site_url: /
+display_url: /
+logo_url: /lieblings.svg
+locale: de
+
+media_folder: static/uploads
+public_folder: /uploads
+
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: pages
+    label: Seiten
+    files:
+      - name: site
+        label: Allgemein
+        file: content/site.yml
+        fields:
+          - { label: Titel, name: title, widget: string }
+          - { label: Untertitel, name: subtitle, widget: string }
+          - { label: Kurzzeile, name: tagline, widget: string }
+          - { label: Beschreibung (SEO), name: description, widget: text }
+          - { label: Hinweis unter dem Logo, name: hero_hint, widget: string }
+          - { label: Scroll-Hinweis, name: scroll_hint, widget: string }
+          - {
+              label: Statusmeldung im Hero,
+              name: status_note,
+              widget: string,
+              required: false,
+              hint: "z. B. Sommerpause oder «Wir sind zurück». Leer lassen, wenn nichts ansteht."
+            }
+
+      - name: besuch
+        label: Besuch
+        file: content/besuch.yml
+        fields:
+          - { label: Titel, name: heading, widget: string }
+          - { label: Einleitung, name: intro, widget: text, required: false }
+          - { label: Titel Öffnungszeiten, name: hours_heading, widget: string }
+          - label: Öffnungszeiten
+            name: hours
+            widget: list
+            fields:
+              - { label: Tage, name: days, widget: string }
+              - { label: Zeit, name: time, widget: string }
+          - { label: Hinweis zu den Zeiten, name: hours_note, widget: string, required: false }
+          - { label: Titel Adresse, name: address_heading, widget: string }
+          - label: Adresse
+            name: address
+            widget: list
+            field: { label: Zeile, name: line, widget: string }
+          - { label: Karten-URL, name: map_url, widget: string }
+          - { label: Karten-Button, name: map_label, widget: string }
+          - { label: Anreise, name: transport, widget: string, required: false }
+          - { label: Titel Kontakt, name: contact_heading, widget: string }
+          - { label: E-Mail, name: email, widget: string }
+          - { label: Kontakt-Hinweis, name: email_note, widget: text, required: false }
+
+      - name: events_intro
+        label: Events-Text
+        file: content/events.yml
+        fields:
+          - { label: Titel, name: heading, widget: string }
+          - { label: Einleitung, name: intro, widget: text }
+          - { label: Text ohne Events, name: empty_text, widget: text }
+          - { label: Titel vergangene Events, name: past_label, widget: string }
+
+      - name: verein
+        label: Verein
+        file: content/verein.md
+        fields:
+          - { label: Titel, name: heading, widget: string }
+          - { label: Lead, name: lead, widget: text }
+          - label: Zahlen
+            name: facts
+            widget: list
+            fields:
+              - { label: Wert, name: value, widget: string }
+              - { label: Beschriftung, name: label, widget: string }
+          - { label: Mitmachen-Titel, name: join_heading, widget: string }
+          - { label: Mitmachen-Text, name: join_text, widget: text }
+          - { label: Mitmachen-E-Mail, name: join_email, widget: string }
+          - { label: Button-Text, name: join_label, widget: string }
+          - { label: Text, name: body, widget: markdown }
+
+      - name: eindruecke
+        label: Eindrücke
+        file: content/eindruecke.yml
+        fields:
+          - { label: Titel, name: heading, widget: string }
+          - { label: Einleitung, name: intro, widget: text, required: false }
+          - label: Bilder
+            name: images
+            widget: list
+            summary: "{{caption}} {{alt}}"
+            fields:
+              - {
+                  label: Bild,
+                  name: src,
+                  widget: image,
+                  media_folder: /static/uploads/eindruecke,
+                  public_folder: /uploads/eindruecke
+                }
+              - { label: Alternativtext, name: alt, widget: string }
+              - { label: Bildlegende, name: caption, widget: string, required: false }
+
+      - name: newsletter
+        label: Newsletter
+        file: content/newsletter.md
+        fields:
+          - { label: Titel, name: heading, widget: string }
+          - { label: E-Mail, name: email, widget: string }
+          - { label: Button-Text, name: button_label, widget: string }
+          - { label: Text, name: body, widget: markdown }
+
+      - name: footer
+        label: Footer
+        file: content/footer.yml
+        fields:
+          - { label: Kurztext, name: tagline, widget: text }
+          - label: Social Media
+            name: socials
+            widget: list
+            fields:
+              - { label: Plattform, name: platform, widget: string }
+              - { label: Handle, name: handle, widget: string }
+              - { label: URL, name: url, widget: string }
+          - { label: Medien-Titel, name: media_heading, widget: string }
+          - { label: Medien-Hinweis, name: media_note, widget: string, required: false }
+          - label: Medien-Dateien
+            name: media
+            widget: list
+            fields:
+              - { label: Beschriftung, name: label, widget: string }
+              - { label: Datei / URL, name: url, widget: string }
+          - label: Rechtliches
+            name: legal_links
+            widget: list
+            fields:
+              - { label: Beschriftung, name: label, widget: string }
+              - { label: URL, name: url, widget: string }
+          - { label: Credit, name: credit, widget: string }
+
+  - name: events
+    label: Events
+    label_singular: Event
+    folder: content/events
+    create: true
+    delete: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: md
+    format: frontmatter
+    sortable_fields: [date, title, category]
+    summary: "{{date}} — {{title}}"
+    view_groups:
+      - { label: Kategorie, field: category }
+    fields:
+      - { label: Titel, name: title, widget: string }
+      - {
+          label: Datum,
+          name: date,
+          widget: datetime,
+          date_format: dd.MM.yyyy,
+          time_format: false,
+          format: yyyy-MM-dd,
+          picker_utc: true
+        }
+      - {
+          label: Uhrzeit,
+          name: time,
+          widget: string,
+          required: false,
+          hint: "z. B. 20:30 — ohne «Uhr», das ergänzt die Website."
+        }
+      - {
+          label: Kategorie,
+          name: category,
+          widget: select,
+          options: [Konzert, Quiz, Lesung, Party, Workshop, Anderes],
+          required: false
+        }
+      - {
+          label: Bild,
+          name: image,
+          widget: image,
+          required: false,
+          media_folder: /static/uploads/events,
+          public_folder: /uploads/events,
+          hint: "Optional. Quadratisch oder 4:3 wirkt am besten auf der Karte."
+        }
+      - { label: Bild-Alternativtext, name: image_alt, widget: string, required: false }
+      - { label: Ort, name: location, widget: string, default: "Lieblings Café Bar", required: false }
+      - { label: Link-URL, name: link_url, widget: string, required: false }
+      - { label: Link-Text, name: link_label, widget: string, required: false }
+      - { label: Beschreibung, name: body, widget: markdown, required: false }

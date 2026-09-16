@@ -1,0 +1,150 @@
+:root {
+	--green: #8fbc8f;
+	--green-deep: #6f9e73;
+	--ink: #16251b;
+	--ink-soft: #3b4f41;
+	--cream: #fbf6ea;
+	--cream-warm: #f4ead4;
+	--sun: #f0b849;
+
+	--font-display: 'Fraunces', Georgia, serif;
+	--font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+	--page: min(1180px, 100% - 3rem);
+	--radius: 1.5rem;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+	/* keep anchored sections clear of the sticky nav */
+	scroll-padding-top: 5.5rem;
+	-webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+body {
+	margin: 0;
+	background: var(--cream);
+	color: var(--ink);
+	font-family: var(--font-body);
+	font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+	line-height: 1.65;
+	-webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	font-family: var(--font-display);
+	font-weight: 600;
+	font-variation-settings: 'SOFT' 50;
+	line-height: 1.05;
+	letter-spacing: -0.02em;
+	margin: 0;
+	text-wrap: balance;
+}
+
+p {
+	margin: 0 0 1em;
+	text-wrap: pretty;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+
+a {
+	color: inherit;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.25em;
+}
+
+img {
+	max-width: 100%;
+	display: block;
+}
+
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+:focus-visible {
+	outline: 3px solid var(--ink);
+	outline-offset: 3px;
+	border-radius: 4px;
+}
+
+.wrap {
+	width: var(--page);
+	margin-inline: auto;
+}
+
+.section {
+	padding-block: clamp(4rem, 9vw, 8rem);
+	scroll-margin-top: 4.5rem;
+}
+
+.section__head {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	margin-bottom: clamp(2rem, 4vw, 3.5rem);
+	max-width: 46ch;
+}
+
+.section__title {
+	font-size: clamp(2.25rem, 1.4rem + 4vw, 4.25rem);
+}
+
+.section__intro {
+	font-size: clamp(1.05rem, 1rem + 0.4vw, 1.3rem);
+	color: var(--ink-soft);
+	margin: 0;
+}
+
+.eyebrow {
+	font-family: var(--font-body);
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--green-deep);
+}
+
+.skip-link {
+	position: absolute;
+	left: 1rem;
+	top: -4rem;
+	z-index: 100;
+	background: var(--ink);
+	color: var(--cream);
+	padding: 0.75rem 1.25rem;
+	border-radius: 999px;
+	transition: top 0.2s;
+}
+
+.skip-link:focus {
+	top: 1rem;
+}
+
+.rich a {
+	text-decoration: underline;
+}
+
+.rich strong {
+	font-weight: 700;
+}

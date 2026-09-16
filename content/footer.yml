@@ -1,0 +1,20 @@
+tagline: Café Bar in der Berner Altstadt. Ehrenamtlich geführt, Gewinn gespendet.
+socials:
+  - platform: Instagram
+    handle: "@lieblingsbern"
+    url: https://www.instagram.com/lieblingsbern/
+  - platform: Facebook
+    handle: /lieblingsbern
+    url: https://www.facebook.com/lieblingsbern
+  - platform: Google Maps
+    handle: Lieblings Bern
+    url: https://maps.app.goo.gl/oRwoJe5e8pBwSg4o9
+media_heading: Medien
+media_note: Logo und Bildmaterial für Presse und Partner.
+media:
+  - label: Logo (SVG)
+    url: /lieblings.svg
+legal_links:
+  - label: Impressum
+    url: mailto:tschou@lieblings.be
+credit: Gebaut mit viel Liebe vom Lieblings-Verein.
