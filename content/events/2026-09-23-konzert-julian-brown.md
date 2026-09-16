@@ -1,9 +1,9 @@
 ---
 title: Konzert Julian Brown
 date: 2026-09-23
-time: "20:30"
+time: 20:30
 category: Konzert
-image: ""
+image: /uploads/events/julianbrown_sw-scaled-3892081750.jpg
 image_alt: ""
 location: Lieblings Café Bar
 ---
