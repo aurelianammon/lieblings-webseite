@@ -1,4 +1,6 @@
 <script>
+	import Window from './Window.svelte';
+
 	let { besuch = {}, socials = [] } = $props();
 </script>
 
@@ -13,61 +15,64 @@
 		</header>
 
 		<div class="visit__grid">
-			<article class="card card--hours">
-				<h3>{besuch.hours_heading}</h3>
-				<ul class="hours">
-					{#each besuch.hours ?? [] as row}
-						<li>
-							<span>{row.days}</span>
-							<strong>{row.time}</strong>
-						</li>
-					{/each}
-				</ul>
-				{#if besuch.hours_note}
-					<p class="card__note">{besuch.hours_note}</p>
-				{/if}
-			</article>
-
-			<article class="card">
-				<h3>{besuch.address_heading}</h3>
-				<address>
-					{#each besuch.address ?? [] as line}
-						<span>{line}</span>
-					{/each}
-				</address>
-				{#if besuch.transport}
-					<p class="card__note">{besuch.transport}</p>
-				{/if}
-				{#if besuch.map_url}
-					<a class="btn" href={besuch.map_url} target="_blank" rel="noopener noreferrer">
-						{besuch.map_label || 'Karte öffnen'}
-						<span aria-hidden="true">↗</span>
-					</a>
-				{/if}
-			</article>
-
-			<article class="card">
-				<h3>{besuch.contact_heading}</h3>
-				{#if besuch.email}
-					<a class="visit__mail" href={`mailto:${besuch.email}`}>{besuch.email}</a>
-				{/if}
-				{#if besuch.email_note}
-					<p class="card__note">{besuch.email_note}</p>
-				{/if}
-
-				{#if socials.length}
-					<ul class="visit__socials">
-						{#each socials as item}
+			<div class="visit__win visit__win--hours">
+				<Window title={besuch.hours_heading || 'Öffnungszeiten'}>
+					<ul class="hours">
+						{#each besuch.hours ?? [] as row}
 							<li>
-								<a href={item.url} target="_blank" rel="noopener noreferrer">
-									{item.platform}
-									<span>{item.handle}</span>
-								</a>
+								<span>{row.days}</span>
+								<strong>{row.time}</strong>
 							</li>
 						{/each}
 					</ul>
-				{/if}
-			</article>
+					{#if besuch.hours_note}
+						<p class="note">{besuch.hours_note}</p>
+					{/if}
+				</Window>
+			</div>
+
+			<div class="visit__win">
+				<Window title={besuch.address_heading || 'Adresse'}>
+					<address>
+						{#each besuch.address ?? [] as line}
+							<span>{line}</span>
+						{/each}
+					</address>
+					{#if besuch.transport}
+						<p class="note">{besuch.transport}</p>
+					{/if}
+					{#if besuch.map_url}
+						<a class="btn" href={besuch.map_url} target="_blank" rel="noopener noreferrer">
+							{besuch.map_label || 'Karte öffnen'}
+							<span aria-hidden="true">↗</span>
+						</a>
+					{/if}
+				</Window>
+			</div>
+
+			<div class="visit__win">
+				<Window title={besuch.contact_heading || 'Kontakt'}>
+					{#if besuch.email}
+						<a class="visit__mail" href={`mailto:${besuch.email}`}>{besuch.email}</a>
+					{/if}
+					{#if besuch.email_note}
+						<p class="note">{besuch.email_note}</p>
+					{/if}
+
+					{#if socials.length}
+						<ul class="visit__socials">
+							{#each socials as item}
+								<li>
+									<a href={item.url} target="_blank" rel="noopener noreferrer">
+										{item.platform}
+										<span>{item.handle}</span>
+									</a>
+								</li>
+							{/each}
+						</ul>
+					{/if}
+				</Window>
+			</div>
 		</div>
 	</div>
 </section>
@@ -76,40 +81,28 @@
 	.visit__grid {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 1.25rem;
-	}
-
-	.card {
-		background: var(--cream-warm);
-		border-radius: var(--radius);
-		padding: clamp(1.4rem, 2.5vw, 2rem);
-		display: flex;
-		flex-direction: column;
 		gap: 1rem;
-		min-height: 100%;
+		align-items: start;
 	}
 
-	.card--hours {
-		background: var(--green);
-		rotate: -0.6deg;
-	}
-
-	.card h3 {
-		font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+	.visit__win--hours {
+		margin-top: 0.75rem;
 	}
 
 	.hours {
 		display: grid;
-		gap: 0.85rem;
+		gap: 0.7rem;
 	}
 
 	.hours li {
 		display: flex;
 		justify-content: space-between;
 		gap: 1rem;
-		padding-bottom: 0.75rem;
-		border-bottom: 1px dashed rgba(22, 37, 27, 0.28);
-		font-size: 0.98rem;
+		padding-bottom: 0.65rem;
+		border-bottom: 1px dashed rgba(22, 37, 27, 0.35);
+		font-size: 0.92rem;
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
 	}
 
 	.hours li:last-child {
@@ -117,53 +110,56 @@
 		padding-bottom: 0;
 	}
 
+	.hours strong {
+		font-family: var(--font-display);
+		font-weight: 700;
+		letter-spacing: 0.04em;
+	}
+
 	address {
 		font-style: normal;
 		display: grid;
-		gap: 0.15rem;
-		font-size: 1.05rem;
+		gap: 0.2rem;
+		font-size: 0.98rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		margin-bottom: 0.85rem;
 	}
 
-	.card__note {
-		margin: 0;
+	.note {
+		margin: 0.85rem 0 0;
 		color: var(--ink-soft);
-		font-size: 0.92rem;
+		font-size: 0.85rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		line-height: 1.4;
 	}
 
 	.visit__mail {
+		display: inline-block;
 		font-family: var(--font-display);
-		font-size: clamp(1.2rem, 1rem + 0.8vw, 1.6rem);
+		font-size: clamp(1.1rem, 0.95rem + 0.6vw, 1.45rem);
+		font-weight: 700;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
 		text-decoration: none;
 		word-break: break-word;
+		margin-bottom: 0.5rem;
 	}
 
 	.visit__mail:hover {
 		text-decoration: underline;
 	}
 
-	.btn {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.4rem;
-		align-self: start;
-		margin-top: auto;
-		padding: 0.55rem 1.1rem;
-		border-radius: 999px;
-		background: var(--ink);
-		color: var(--cream);
-		font-size: 0.9rem;
-		font-weight: 600;
-		text-decoration: none;
-	}
-
-	.btn:hover {
-		background: var(--green-deep);
+	.visit :global(.btn) {
+		margin-top: 1rem;
 	}
 
 	.visit__socials {
 		display: grid;
-		gap: 0.45rem;
-		margin-top: auto;
+		gap: 0;
+		margin-top: 1rem;
+		border: var(--stroke) solid var(--ink);
 	}
 
 	.visit__socials a {
@@ -171,11 +167,18 @@
 		justify-content: space-between;
 		gap: 0.75rem;
 		padding: 0.55rem 0.7rem;
-		border-radius: 0.9rem;
-		background: rgba(22, 37, 27, 0.06);
+		border-bottom: var(--stroke) solid var(--ink);
 		text-decoration: none;
+		font-family: var(--font-display);
+		font-size: 0.78rem;
 		font-weight: 600;
-		font-size: 0.92rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		transition: background-color 0.15s ease, color 0.15s ease;
+	}
+
+	.visit__socials li:last-child a {
+		border-bottom: 0;
 	}
 
 	.visit__socials a span {
@@ -197,8 +200,8 @@
 			grid-template-columns: 1fr;
 		}
 
-		.card--hours {
-			rotate: 0;
+		.visit__win--hours {
+			margin-top: 0;
 		}
 	}
 </style>

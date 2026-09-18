@@ -1,19 +1,18 @@
 <script>
 	import Logo from './Logo.svelte';
+	import Window from './Window.svelte';
 
 	let { site = {}, statusNote = '' } = $props();
 
 	const RAY_COUNT = 14;
-	const BASE_Y = 53; // sun edge, in the 200×200 ray viewBox
+	const BASE_Y = 53;
 	const CENTER = 100;
 
-	/** Deterministic pseudo-random so the prerendered and hydrated rays match. */
 	function rnd(i, salt) {
 		const x = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453;
 		return x - Math.floor(x);
 	}
 
-	/** A wonky, slightly bowed petal — drawn like a kid would draw a sunbeam. */
 	function rayPath(len, halfBase, halfTip, bow) {
 		const tipY = BASE_Y - len;
 		return [
@@ -40,7 +39,6 @@
 		};
 	});
 
-	// little cream dots that hop into the gaps between the beams
 	const dots = Array.from({ length: RAY_COUNT }, (_, i) => ({
 		angle: i * step + step / 2 + (rnd(i, 9) - 0.5) * 6,
 		dist: 12 + rnd(i, 10) * 11,
@@ -54,7 +52,6 @@
 
 	const shining = $derived(hovered || pinned || teasing);
 
-	// one gentle burst after load so the interaction is discoverable on touch
 	$effect(() => {
 		const on = setTimeout(() => (teasing = true), 900);
 		const off = setTimeout(() => (teasing = false), 2600);
@@ -66,53 +63,73 @@
 </script>
 
 <header class="hero" id="start">
-	<div class="hero__inner">
-		<div class="sun" class:is-shining={shining}>
-			<svg class="rays" viewBox="0 0 200 200" aria-hidden="true">
-				{#each rays as ray}
-					<g
-						class="ray"
-						style="--wobble:{ray.wobble}s; --spin:{ray.spin}deg; transform: rotate({ray.angle}deg)"
-					>
-						<path class="ray__shape" style="--d:{ray.delay}ms" d={ray.path} />
-					</g>
-				{/each}
-				{#each dots as dot}
-					<g class="ray" style="transform: rotate({dot.angle}deg)">
-						<circle
-							class="dot"
-							style="--d:{dot.delay}ms"
-							cx={CENTER}
-							cy={BASE_Y - dot.dist}
-							r={dot.r}
-						/>
-					</g>
-				{/each}
-			</svg>
+	<div class="hero__desk">
+		<div class="hero__logo-win">
+			<Window title="Das Logo" body="warm">
+				<div class="sun" class:is-shining={shining}>
+					<svg class="rays" viewBox="0 0 200 200" aria-hidden="true">
+						{#each rays as ray}
+							<g
+								class="ray"
+								style="--wobble:{ray.wobble}s; --spin:{ray.spin}deg; transform: rotate({ray.angle}deg)"
+							>
+								<path class="ray__shape" style="--d:{ray.delay}ms" d={ray.path} />
+							</g>
+						{/each}
+						{#each dots as dot}
+							<g class="ray" style="transform: rotate({dot.angle}deg)">
+								<circle
+									class="dot"
+									style="--d:{dot.delay}ms"
+									cx={CENTER}
+									cy={BASE_Y - dot.dist}
+									r={dot.r}
+								/>
+							</g>
+						{/each}
+					</svg>
 
-			<button
-				type="button"
-				class="sun__button"
-				aria-pressed={pinned}
-				onpointerenter={() => (hovered = true)}
-				onpointerleave={() => (hovered = false)}
-				onfocus={() => (hovered = true)}
-				onblur={() => (hovered = false)}
-				onclick={() => (pinned = !pinned)}
-			>
-				<Logo class="sun__logo" title="Lieblings Café Bar" />
-				<span class="sr-only">Lieblings Café Bar — Sonnenstrahlen ein- und ausschalten</span>
-			</button>
+					<button
+						type="button"
+						class="sun__button"
+						aria-pressed={pinned}
+						onpointerenter={() => (hovered = true)}
+						onpointerleave={() => (hovered = false)}
+						onfocus={() => (hovered = true)}
+						onblur={() => (hovered = false)}
+						onclick={() => (pinned = !pinned)}
+					>
+						<Logo class="sun__logo" title="Lieblings Café Bar" />
+						<span class="sr-only">Lieblings Café Bar — Sonnenstrahlen ein- und ausschalten</span>
+					</button>
+				</div>
+
+				<div class="hero__brand-bar">
+					<span class="hero__brand-name">{site.title ?? 'Lieblings'}</span>
+					<span class="hero__brand-sub">{site.subtitle ?? 'Café Bar'}</span>
+				</div>
+			</Window>
 		</div>
 
-		<h1 class="sr-only">{site.title ?? 'Lieblings'} {site.subtitle ?? ''}</h1>
+		<div class="hero__side">
+			{#if statusNote}
+				<div class="hero__status-win">
+					<Window title="Status">
+						<p class="hero__status">{statusNote}</p>
+					</Window>
+				</div>
+			{/if}
 
-		{#if statusNote}
-			<p class="hero__status">{statusNote}</p>
-		{/if}
-
-		<p class="hero__hint" aria-hidden="true">{site.hero_hint ?? 'Berühre die Sonne'}</p>
+			<div class="hero__about-win">
+				<Window title="Was ist Lieblings?">
+					<p class="hero__tagline">{site.tagline}</p>
+					<p class="hero__hint" aria-hidden="true">{site.hero_hint ?? 'Berühre die Sonne'}</p>
+				</Window>
+			</div>
+		</div>
 	</div>
+
+	<h1 class="sr-only">{site.title ?? 'Lieblings'} {site.subtitle ?? ''}</h1>
 
 	<a class="hero__scroll" href="#besuch">
 		<span>{site.scroll_hint ?? 'Mehr entdecken'}</span>
@@ -132,37 +149,60 @@
 <style>
 	.hero {
 		position: relative;
-		min-height: 100svh;
+		min-height: calc(100svh - var(--marquee-h));
 		display: grid;
-		place-items: center;
-		background: radial-gradient(circle at 50% 40%, #9cc79c 0%, var(--green) 55%, #7fae82 100%);
-		overflow: hidden;
+		align-content: center;
+		padding: clamp(5.5rem, 10vw, 7rem) 0 clamp(4rem, 8vw, 5.5rem);
 	}
 
-	/* hand-painted paper grain */
-	.hero::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-		opacity: 0.35;
-		mix-blend-mode: soft-light;
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+	.hero__desk {
+		width: var(--page);
+		margin-inline: auto;
+		display: grid;
+		grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+		gap: clamp(1rem, 2.5vw, 1.75rem);
+		align-items: start;
 	}
 
-	.hero__inner {
-		position: relative;
-		z-index: 1;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 1.5rem;
-		padding: 6rem 1.5rem 7rem;
+	.hero__logo-win {
+		animation: win-in 0.7s cubic-bezier(0.22, 1.2, 0.36, 1) both;
+	}
+
+	.hero__side {
+		display: grid;
+		gap: 1rem;
+		padding-top: clamp(0.5rem, 4vw, 3rem);
+	}
+
+	.hero__status-win {
+		animation: win-in 0.7s cubic-bezier(0.22, 1.2, 0.36, 1) 0.12s both;
+	}
+
+	.hero__about-win {
+		animation: win-in 0.7s cubic-bezier(0.22, 1.2, 0.36, 1) 0.22s both;
+	}
+
+	@keyframes win-in {
+		from {
+			opacity: 0;
+			transform: translateY(18px);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	.hero__logo-win :global(.win__body) {
+		padding: clamp(1.25rem, 3vw, 2rem);
+		display: grid;
+		gap: 1rem;
+		justify-items: center;
 	}
 
 	.sun {
 		position: relative;
-		width: clamp(275px, 58vmin, 560px);
+		width: clamp(220px, 42vmin, 420px);
 		aspect-ratio: 1;
 		display: grid;
 		place-items: center;
@@ -199,7 +239,7 @@
 	}
 
 	.dot {
-		fill: var(--cream-warm);
+		fill: var(--green);
 		transform-origin: 100px 53px;
 	}
 
@@ -207,14 +247,12 @@
 	.is-shining .dot {
 		transform: none;
 		opacity: 1;
-		/* overshoot on the way out — that is the bounce */
 		transition:
 			transform 0.62s cubic-bezier(0.32, 1.75, 0.5, 1),
 			opacity 0.2s ease;
 		transition-delay: var(--d);
 	}
 
-	/* rays keep breathing while they are out */
 	.is-shining .ray {
 		animation: ray-sway var(--wobble, 4s) ease-in-out infinite alternate;
 	}
@@ -253,26 +291,59 @@
 	.sun__button :global(.sun__logo) {
 		width: 100%;
 		height: auto;
-		filter: drop-shadow(0 12px 28px rgba(22, 37, 27, 0.22));
+	}
+
+	.hero__brand-bar {
+		display: flex;
+		width: 100%;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-top: 0.35rem;
+		border-top: var(--stroke) solid var(--ink);
+		font-family: var(--font-display);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+	}
+
+	.hero__brand-name {
+		font-size: clamp(1.4rem, 1rem + 1.5vw, 2.1rem);
+		font-weight: 700;
+	}
+
+	.hero__brand-sub {
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--ink-soft);
 	}
 
 	.hero__status {
 		margin: 0;
 		font-family: var(--font-display);
-		font-size: clamp(1.15rem, 1rem + 0.9vw, 1.9rem);
-		font-style: italic;
-		text-align: center;
-		color: var(--ink);
-		max-width: 24ch;
+		font-size: clamp(1.15rem, 1rem + 0.7vw, 1.65rem);
+		font-weight: 700;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		line-height: 1.2;
+	}
+
+	.hero__tagline {
+		margin: 0;
+		font-size: 0.92rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		line-height: 1.5;
+		color: var(--ink-soft);
 	}
 
 	.hero__hint {
-		margin: 0;
-		font-size: 0.8rem;
+		margin: 1rem 0 0;
+		font-family: var(--font-display);
+		font-size: 0.72rem;
 		font-weight: 600;
-		letter-spacing: 0.2em;
+		letter-spacing: 0.18em;
 		text-transform: uppercase;
-		color: rgba(22, 37, 27, 0.6);
+		color: var(--green-deep);
 		animation: hint-pulse 3.4s ease-in-out infinite;
 	}
 
@@ -280,30 +351,29 @@
 		0%,
 		100% {
 			opacity: 0.45;
-			transform: translateY(0) rotate(-0.6deg);
 		}
 		50% {
 			opacity: 1;
-			transform: translateY(-3px) rotate(0.6deg);
 		}
 	}
 
 	.hero__scroll {
 		position: absolute;
 		z-index: 1;
-		bottom: 1.75rem;
+		bottom: 1.25rem;
 		left: 50%;
 		translate: -50% 0;
 		display: inline-flex;
 		align-items: center;
 		gap: 0.5rem;
-		font-size: 0.8rem;
+		font-family: var(--font-display);
+		font-size: 0.75rem;
 		font-weight: 600;
-		letter-spacing: 0.1em;
+		letter-spacing: 0.14em;
 		text-transform: uppercase;
 		text-decoration: none;
 		color: var(--ink);
-		opacity: 0.75;
+		opacity: 0.8;
 	}
 
 	.hero__scroll:hover {
@@ -326,16 +396,14 @@
 		}
 	}
 
-	.sr-only {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		padding: 0;
-		margin: -1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
-		border: 0;
+	@media (max-width: 860px) {
+		.hero__desk {
+			grid-template-columns: 1fr;
+		}
+
+		.hero__side {
+			padding-top: 0;
+		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
@@ -348,7 +416,10 @@
 
 		.is-shining .ray,
 		.hero__hint,
-		.hero__scroll svg {
+		.hero__scroll svg,
+		.hero__logo-win,
+		.hero__status-win,
+		.hero__about-win {
 			animation: none;
 		}
 

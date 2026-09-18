@@ -1,4 +1,6 @@
 <script>
+	import Window from './Window.svelte';
+
 	let { eindruecke = {} } = $props();
 
 	let openIndex = $state(-1);
@@ -33,13 +35,12 @@
 		{#if images.length}
 			<ul class="mosaic">
 				{#each images as image, index}
-					<li>
-						<button type="button" onclick={() => open(index)}>
-							<img src={image.src} alt={image.alt || ''} loading="lazy" />
-							{#if image.caption}
-								<span>{image.caption}</span>
-							{/if}
-						</button>
+					<li class:mosaic__lift={index % 3 === 1} class:mosaic__nudge={index % 3 === 2}>
+						<Window title={image.caption || `Bild ${index + 1}`} body="flush">
+							<button type="button" onclick={() => open(index)}>
+								<img src={image.src} alt={image.alt || ''} loading="lazy" />
+							</button>
+						</Window>
 					</li>
 				{/each}
 			</ul>
@@ -63,13 +64,13 @@
 				<figcaption>{active.caption}</figcaption>
 			{/if}
 		</figure>
-		<button class="lightbox__nav lightbox__nav--prev" type="button" onclick={() => step(-1)}>
-			Zurück
+		<button class="lightbox__nav lightbox__nav--prev btn" type="button" onclick={() => step(-1)}>
+			← Zurück
 		</button>
-		<button class="lightbox__nav lightbox__nav--next" type="button" onclick={() => step(1)}>
-			Weiter
+		<button class="lightbox__nav lightbox__nav--next btn" type="button" onclick={() => step(1)}>
+			Weiter →
 		</button>
-		<button class="lightbox__close" type="button" onclick={close}>Schliessen</button>
+		<button class="lightbox__close btn" type="button" onclick={close}>Schliessen</button>
 	</div>
 {/if}
 
@@ -87,6 +88,15 @@
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: 1rem;
+		align-items: start;
+	}
+
+	.mosaic li.mosaic__lift {
+		margin-top: 0.85rem;
+	}
+
+	.mosaic li.mosaic__nudge {
+		margin-top: 0.35rem;
 	}
 
 	.mosaic button {
@@ -94,33 +104,9 @@
 		padding: 0;
 		border: 0;
 		background: var(--cream-warm);
-		border-radius: 1.15rem;
-		overflow: hidden;
 		cursor: zoom-in;
-		text-align: left;
 		color: inherit;
-		box-shadow: 0 10px 30px rgba(22, 37, 27, 0.08);
-		transition:
-			transform 0.35s cubic-bezier(0.32, 1.5, 0.6, 1),
-			box-shadow 0.35s ease;
-	}
-
-	.mosaic li:nth-child(3n + 1) button {
-		rotate: -1.2deg;
-	}
-
-	.mosaic li:nth-child(3n + 2) button {
-		rotate: 1.1deg;
-	}
-
-	.mosaic li:nth-child(3n) button {
-		rotate: -0.6deg;
-	}
-
-	.mosaic button:hover,
-	.mosaic button:focus-visible {
-		transform: translateY(-6px) rotate(0deg);
-		box-shadow: 0 18px 40px rgba(22, 37, 27, 0.16);
+		display: block;
 	}
 
 	.mosaic img {
@@ -129,16 +115,11 @@
 		object-fit: cover;
 	}
 
-	.mosaic span {
-		display: block;
-		padding: 0.7rem 0.9rem 0.9rem;
-		font-size: 0.88rem;
-		font-weight: 600;
-	}
-
 	.gallery__empty {
 		margin: 0;
 		color: var(--ink-soft);
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
 	}
 
 	.lightbox {
@@ -154,7 +135,7 @@
 		position: absolute;
 		inset: 0;
 		border: 0;
-		background: rgba(22, 37, 27, 0.82);
+		background: rgba(22, 37, 27, 0.86);
 		cursor: zoom-out;
 	}
 
@@ -163,35 +144,33 @@
 		z-index: 1;
 		margin: 0;
 		max-width: min(920px, 100%);
+		border: var(--stroke) solid var(--cream);
+		background: var(--cream);
+		padding: 0.65rem;
 	}
 
 	.lightbox img {
-		max-height: min(78vh, 920px);
+		max-height: min(72vh, 920px);
 		width: auto;
 		max-width: 100%;
 		margin-inline: auto;
-		border-radius: 1rem;
 	}
 
 	.lightbox figcaption {
-		margin-top: 0.75rem;
+		margin-top: 0.65rem;
 		text-align: center;
-		color: var(--cream);
-		font-weight: 600;
+		font-family: var(--font-display);
+		font-size: 0.85rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--ink);
 	}
 
 	.lightbox__close,
 	.lightbox__nav {
 		position: absolute;
 		z-index: 1;
-		border: 0;
-		background: var(--cream);
-		color: var(--ink);
-		font: inherit;
-		font-weight: 700;
-		padding: 0.55rem 0.95rem;
-		border-radius: 999px;
-		cursor: pointer;
 	}
 
 	.lightbox__close {
@@ -214,6 +193,11 @@
 	@media (max-width: 780px) {
 		.mosaic {
 			grid-template-columns: 1fr 1fr;
+		}
+
+		.mosaic li.mosaic__lift,
+		.mosaic li.mosaic__nudge {
+			margin-top: 0;
 		}
 
 		.lightbox__nav {

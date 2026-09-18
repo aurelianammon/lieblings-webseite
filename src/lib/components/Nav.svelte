@@ -8,7 +8,7 @@
 	let active = $state('');
 
 	$effect(() => {
-		const onScroll = () => (scrolled = window.scrollY > window.innerHeight * 0.75);
+		const onScroll = () => (scrolled = window.scrollY > window.innerHeight * 0.55);
 		onScroll();
 		window.addEventListener('scroll', onScroll, { passive: true });
 		return () => window.removeEventListener('scroll', onScroll);
@@ -88,46 +88,50 @@
 <style>
 	.nav {
 		position: fixed;
-		inset: 0 0 auto;
+		top: var(--marquee-h);
+		left: 0;
+		right: 0;
 		z-index: 50;
+		pointer-events: none;
 	}
 
 	.nav__bar {
 		width: var(--page);
 		margin-inline: auto;
-		margin-top: 0.9rem;
+		margin-top: 0.75rem;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		gap: 1rem;
-		padding: 0.55rem 0.85rem 0.55rem 1rem;
-		border-radius: 999px;
-		background: transparent;
-		transition:
-			background-color 0.35s ease,
-			box-shadow 0.35s ease,
-			backdrop-filter 0.35s ease;
+		padding: 0;
+		pointer-events: none;
 	}
 
-	.is-scrolled .nav__bar,
-	.is-open .nav__bar {
-		background: rgba(251, 246, 234, 0.88);
-		backdrop-filter: blur(12px) saturate(1.2);
-		box-shadow: 0 8px 30px rgba(22, 37, 27, 0.12);
+	.nav__brand,
+	.nav__list,
+	.nav__toggle,
+	.nav__panel {
+		pointer-events: auto;
 	}
 
 	.nav__brand {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.6rem;
+		gap: 0.55rem;
+		padding: 0.4rem 0.75rem;
+		border: var(--stroke) solid var(--ink);
+		background: var(--cream);
+		box-shadow: var(--win-shadow);
 		font-family: var(--font-display);
-		font-size: 1.1rem;
-		font-weight: 600;
+		font-size: 0.95rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
 		text-decoration: none;
 		color: var(--ink);
 		opacity: 0;
 		pointer-events: none;
-		transition: opacity 0.35s ease;
+		transition: opacity 0.3s ease;
 	}
 
 	.is-scrolled .nav__brand,
@@ -137,31 +141,48 @@
 	}
 
 	.nav__brand :global(.nav__logo) {
-		width: 1.85rem;
-		height: 1.85rem;
+		width: 1.5rem;
+		height: 1.5rem;
 	}
 
 	.nav__list {
 		display: flex;
-		align-items: center;
-		gap: 0.25rem;
+		align-items: stretch;
+		border: var(--stroke) solid var(--ink);
+		background: var(--cream);
+		box-shadow: var(--win-shadow);
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.3s ease;
+	}
+
+	.is-scrolled .nav__list,
+	.is-open .nav__list {
+		opacity: 1;
+		pointer-events: auto;
 	}
 
 	.nav__link {
-		display: inline-block;
-		padding: 0.4rem 0.85rem;
-		border-radius: 999px;
-		font-size: 0.92rem;
-		font-weight: 500;
+		display: inline-flex;
+		align-items: center;
+		padding: 0.45rem 0.85rem;
+		font-family: var(--font-display);
+		font-size: 0.78rem;
+		font-weight: 600;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
 		text-decoration: none;
 		color: var(--ink);
-		transition:
-			background-color 0.2s ease,
-			color 0.2s ease;
+		border-right: var(--stroke) solid var(--ink);
+		transition: background-color 0.15s ease, color 0.15s ease;
+	}
+
+	.nav__list li:last-child .nav__link {
+		border-right: 0;
 	}
 
 	.nav__link:hover {
-		background: rgba(22, 37, 27, 0.09);
+		background: var(--green);
 	}
 
 	.nav__link.is-active {
@@ -173,14 +194,17 @@
 		display: none;
 		align-items: center;
 		gap: 0.55rem;
-		border: 0;
+		border: var(--stroke) solid var(--ink);
 		background: var(--ink);
 		color: var(--cream);
+		box-shadow: var(--win-shadow);
 		font: inherit;
-		font-size: 0.85rem;
+		font-family: var(--font-display);
+		font-size: 0.78rem;
 		font-weight: 600;
-		padding: 0.5rem 1rem;
-		border-radius: 999px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		padding: 0.5rem 0.9rem;
 		cursor: pointer;
 	}
 
@@ -193,18 +217,15 @@
 	.nav__toggle-lines i {
 		display: block;
 		height: 2px;
-		border-radius: 2px;
 		background: currentColor;
 	}
 
 	.nav__panel {
 		width: var(--page);
-		margin: 0.5rem auto 0;
-		padding: 1rem;
-		border-radius: 1.5rem;
-		background: rgba(251, 246, 234, 0.96);
-		backdrop-filter: blur(12px);
-		box-shadow: 0 14px 40px rgba(22, 37, 27, 0.18);
+		margin: 0.55rem auto 0;
+		border: var(--stroke) solid var(--ink);
+		background: var(--cream);
+		box-shadow: var(--win-shadow);
 	}
 
 	.nav__panel[hidden] {
@@ -213,20 +234,26 @@
 
 	.nav__panel ul {
 		display: grid;
-		gap: 0.15rem;
 	}
 
 	.nav__panel a {
 		display: block;
-		padding: 0.7rem 0.9rem;
-		border-radius: 0.9rem;
+		padding: 0.85rem 1rem;
+		border-bottom: var(--stroke) solid var(--ink);
 		font-family: var(--font-display);
-		font-size: 1.35rem;
+		font-size: 1.15rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
 		text-decoration: none;
 	}
 
+	.nav__panel li:last-child a {
+		border-bottom: 0;
+	}
+
 	.nav__panel a:hover {
-		background: rgba(22, 37, 27, 0.08);
+		background: var(--green);
 	}
 
 	@media (max-width: 860px) {
@@ -236,10 +263,15 @@
 
 		.nav__toggle {
 			display: inline-flex;
+			margin-left: auto;
 		}
 
 		.nav__brand {
 			opacity: 1;
+			pointer-events: auto;
+		}
+
+		.nav__bar {
 			pointer-events: auto;
 		}
 	}

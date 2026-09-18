@@ -1,22 +1,11 @@
 <script>
-	import Nav from '$lib/components/Nav.svelte';
-	import Hero from '$lib/components/Hero.svelte';
-	import Visit from '$lib/components/Visit.svelte';
-	import Events from '$lib/components/Events.svelte';
-	import Verein from '$lib/components/Verein.svelte';
-	import Gallery from '$lib/components/Gallery.svelte';
-	import Newsletter from '$lib/components/Newsletter.svelte';
-	import Footer from '$lib/components/Footer.svelte';
+	import Desktop from '$lib/components/Desktop.svelte';
+	import Marquee from '$lib/components/Marquee.svelte';
 
 	let { data } = $props();
 
-	const sections = [
-		{ id: 'besuch', label: 'Besuch' },
-		{ id: 'events', label: 'Events' },
-		{ id: 'verein', label: 'Verein' },
-		{ id: 'eindruecke', label: 'Eindrücke' },
-		{ id: 'newsletter', label: 'Newsletter' }
-	];
+	const topMarquee = 'Lieblings Café Bar';
+	const bottomMarquee = 'In Bern an der Gerechtigkeitsgasse 13';
 </script>
 
 <svelte:head>
@@ -28,13 +17,18 @@
 	<link rel="canonical" href="https://lieblings.be/" />
 </svelte:head>
 
-<Nav sections={sections} title={data.site.title} />
-<Hero site={data.site} statusNote={data.site.status_note} />
-<main id="inhalt">
-	<Visit besuch={data.besuch} socials={data.footer.socials} />
-	<Events meta={data.eventsMeta} events={data.events} />
-	<Verein verein={data.verein} />
-	<Gallery eindruecke={data.eindruecke} />
-	<Newsletter newsletter={data.newsletter} />
-</main>
-<Footer site={data.site} besuch={data.besuch} footer={data.footer} />
+<div class="shell">
+	<Marquee text={topMarquee} position="top" />
+	<Desktop {data} />
+	<Marquee text={bottomMarquee} position="bottom" />
+</div>
+
+<style>
+	.shell {
+		height: 100svh;
+		height: 100dvh;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+</style>

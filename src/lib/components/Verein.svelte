@@ -1,4 +1,6 @@
 <script>
+	import Window from './Window.svelte';
+
 	let { verein = {} } = $props();
 </script>
 
@@ -13,32 +15,37 @@
 		</header>
 
 		{#if verein.body}
-			<div class="verein__copy rich">{@html verein.body}</div>
+			<Window title="Der Verein">
+				<div class="verein__copy rich">{@html verein.body}</div>
+			</Window>
 		{/if}
 
 		{#if verein.facts?.length}
 			<ul class="facts">
-				{#each verein.facts as fact}
-					<li>
-						<strong>{fact.value}</strong>
-						<span>{fact.label}</span>
+				{#each verein.facts as fact, i}
+					<li class:facts__offset={i === 1}>
+						<Window title={fact.label} body={i === 1 ? 'warm' : 'green'}>
+							<strong>{fact.value}</strong>
+						</Window>
 					</li>
 				{/each}
 			</ul>
 		{/if}
 
 		{#if verein.join_heading}
-			<aside class="join">
-				<div>
-					<h3>{verein.join_heading}</h3>
-					<p>{verein.join_text}</p>
-				</div>
-				{#if verein.join_email}
-					<a class="join__btn" href={`mailto:${verein.join_email}`}>
-						{verein.join_label || 'Schreib uns'}
-					</a>
-				{/if}
-			</aside>
+			<Window title="Mitmachen" chrome="ink" body="warm">
+				<aside class="join">
+					<div>
+						<h3>{verein.join_heading}</h3>
+						<p>{verein.join_text}</p>
+					</div>
+					{#if verein.join_email}
+						<a class="btn" href={`mailto:${verein.join_email}`}>
+							{verein.join_label || 'Schreib uns'}
+						</a>
+					{/if}
+				</aside>
+			</Window>
 		{/if}
 	</div>
 </section>
@@ -46,17 +53,17 @@
 <style>
 	.verein__layout {
 		display: grid;
-		gap: clamp(1.5rem, 4vw, 2.75rem);
+		gap: clamp(1.25rem, 3vw, 2rem);
 	}
 
 	.verein .section__head {
 		margin-bottom: 0;
-		max-width: 38ch;
+		max-width: 40ch;
 	}
 
 	.verein__copy {
 		max-width: 62ch;
-		font-size: 1.08rem;
+		font-size: 1rem;
 		color: var(--ink-soft);
 	}
 
@@ -66,32 +73,16 @@
 		gap: 1rem;
 	}
 
-	.facts li {
-		background: var(--green);
-		border-radius: var(--radius);
-		padding: 1.4rem 1.2rem;
-		display: grid;
-		gap: 0.35rem;
-	}
-
-	.facts li:nth-child(2) {
-		rotate: -1.4deg;
-		background: var(--cream-warm);
-	}
-
-	.facts li:nth-child(3) {
-		rotate: 1deg;
+	.facts__offset {
+		margin-top: 0.6rem;
 	}
 
 	.facts strong {
 		font-family: var(--font-display);
-		font-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+		font-size: clamp(1.85rem, 1.3rem + 1.8vw, 2.75rem);
 		line-height: 1;
-	}
-
-	.facts span {
-		font-size: 0.95rem;
-		color: var(--ink-soft);
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
 	}
 
 	.join {
@@ -100,35 +91,21 @@
 		align-items: center;
 		justify-content: space-between;
 		gap: 1.25rem;
-		padding: clamp(1.4rem, 3vw, 2rem);
-		border-radius: var(--radius);
-		background: var(--ink);
-		color: var(--cream);
 	}
 
 	.join h3 {
-		font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.2rem);
-		margin-bottom: 0.4rem;
+		font-size: clamp(1.35rem, 1.1rem + 1vw, 1.85rem);
+		margin-bottom: 0.45rem;
 	}
 
 	.join p {
 		margin: 0;
 		max-width: 48ch;
-		color: rgba(251, 246, 234, 0.78);
-	}
-
-	.join__btn {
-		display: inline-flex;
-		padding: 0.75rem 1.3rem;
-		border-radius: 999px;
-		background: var(--green);
-		color: var(--ink);
-		font-weight: 700;
-		text-decoration: none;
-	}
-
-	.join__btn:hover {
-		background: var(--cream);
+		color: var(--ink-soft);
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		font-size: 0.9rem;
+		line-height: 1.45;
 	}
 
 	@media (max-width: 780px) {
@@ -136,9 +113,8 @@
 			grid-template-columns: 1fr;
 		}
 
-		.facts li:nth-child(2),
-		.facts li:nth-child(3) {
-			rotate: 0;
+		.facts__offset {
+			margin-top: 0;
 		}
 	}
 </style>

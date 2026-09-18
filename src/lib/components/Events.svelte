@@ -48,39 +48,40 @@
 </section>
 
 <style>
-	.events {
-		background: #f3ead3;
-	}
-
 	.events__list {
 		display: grid;
-		gap: 1.25rem;
+		gap: 1rem;
 	}
 
 	.events__empty {
 		margin: 0;
-		padding: 2rem;
-		border-radius: var(--radius);
+		padding: 1.25rem;
+		border: var(--stroke) solid var(--ink);
 		background: var(--cream);
+		box-shadow: var(--win-shadow);
 		color: var(--ink-soft);
-		max-width: 40ch;
+		max-width: 42ch;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		font-size: 0.92rem;
 	}
 
 	.events__past {
-		margin-top: 3rem;
+		margin-top: 2.5rem;
 	}
 
 	.events__past summary {
 		cursor: pointer;
+		font-family: var(--font-display);
 		font-weight: 700;
-		letter-spacing: 0.08em;
+		letter-spacing: 0.12em;
 		text-transform: uppercase;
-		font-size: 0.8rem;
+		font-size: 0.78rem;
 		color: var(--ink-soft);
-		margin-bottom: 1.25rem;
+		margin-bottom: 1rem;
 	}
 
 	.events__list--past {
-		opacity: 0.9;
+		opacity: 0.88;
 	}
 </style>
