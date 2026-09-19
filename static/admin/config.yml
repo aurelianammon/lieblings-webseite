@@ -169,9 +169,8 @@ collections:
           label: Datum,
           name: date,
           widget: datetime,
-          date_format: dd.MM.yyyy,
+          format: YYYY-MM-DD,
           time_format: false,
-          format: yyyy-MM-dd,
           picker_utc: true
         }
       - {

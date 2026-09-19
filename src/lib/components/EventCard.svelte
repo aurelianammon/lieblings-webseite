@@ -55,10 +55,6 @@
 		padding-bottom: 0;
 	}
 
-	.event.is-past {
-		opacity: 0.55;
-	}
-
 	.event__media img {
 		width: 100%;
 		aspect-ratio: 16 / 10;

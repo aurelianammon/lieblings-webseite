@@ -1,13 +1,5 @@
 ---
 heading: Der Verein
-lead: Wir sind ein Haufen von Leuten, die ihrer Freude an nachhaltiger, gemütlicher Gastronomie nachgehen.
-facts:
-  - value: 100%
-    label: ehrenamtlich
-  - value: 100%
-    label: des Gewinns gespendet
-  - value: "2002"
-    label: seit dem Anfang
 join_heading: Mitmachen
 join_text: Lust hinter der Bar zu stehen, ein Konzert zu organisieren oder einfach mitzuhelfen? Als Vereinsmitglied übernimmst du alleine oder zu zweit eine Schicht pro Monat.
 join_email: tschou@lieblings.be
